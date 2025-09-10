@@ -3,18 +3,18 @@ import sqlite3
 
 def stream_users_in_batches(batch_size):
     """
-    Generator to fetch users from DB in batches
+    Generator to fetch users from user_data table in batches
     """
-    conn = sqlite3.connect("users.db")   # assumes users.db exists
+    conn = sqlite3.connect("users.db")   # DB file
     conn.row_factory = sqlite3.Row       # dict-like rows
     cur = conn.cursor()
-    cur.execute("SELECT * FROM users")
+    cur.execute("SELECT * FROM user_data")   # ✅ use user_data
 
     while True:
         rows = cur.fetchmany(batch_size)
         if not rows:
             break
-        yield [dict(row) for row in rows]
+        yield [dict(row) for row in rows]    # ✅ yield, not return
 
     conn.close()
 
