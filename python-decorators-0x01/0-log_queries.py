@@ -19,7 +19,8 @@ def log_queries(func):
         
         # Log the query if found
         if query:
-            print(f"Executing query: {query}")
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            print(f"[{timestamp}] Executing query: {query}")
         
         # Execute the original function
         return func(*args, **kwargs)
