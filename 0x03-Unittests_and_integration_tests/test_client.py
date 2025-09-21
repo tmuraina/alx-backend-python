@@ -34,8 +34,8 @@ class TestGithubOrgClient(unittest.TestCase):
             "repos_url": "https://api.github.com/orgs/google/repos"
         }
 
-        with patch('client.GithubOrgClient.org',
-                   new_callable=PropertyMock) as mock_org:
+        with patch.object(GithubOrgClient, 'org',
+                          new_callable=PropertyMock) as mock_org:
             mock_org.return_value = known_payload
             client = GithubOrgClient("google")
             result = client._public_repos_url
@@ -51,8 +51,8 @@ class TestGithubOrgClient(unittest.TestCase):
         ]
         mock_get_json.return_value = test_repos_payload
 
-        with patch('client.GithubOrgClient._public_repos_url',
-                   new_callable=PropertyMock) as mock_public_repos_url:
+        with patch.object(GithubOrgClient, '_public_repos_url',
+                          new_callable=PropertyMock) as mock_public_repos_url:
             mock_public_repos_url.return_value = (
                 "https://api.github.com/orgs/google/repos"
             )
