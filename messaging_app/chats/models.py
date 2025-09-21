@@ -33,6 +33,15 @@ class User(AbstractUser):
     
     # Email field (already exists in AbstractUser, but ensure it's unique and required)
     email = models.EmailField(unique=True, null=False, blank=False)
+
+    # Password hash field (explicitly defined to match database specification)
+    # Note: AbstractUser already handles password hashing, but we define this for specification compliance
+    password = models.CharField(
+        max_length=128,
+        null=False,
+        blank=False,
+        help_text="Password hash stored securely"
+    )
     
     # Phone number with validation
     phone_regex = RegexValidator(
