@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-your-secret-key-replace-this-in-production'
+SECRET_KEY = 'u9&c*s%)ddk2m&&^3ig+tz=1@u4oz92i#m_^zsc)_r%h7&5sf&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -147,3 +147,4 @@ CORS_ALLOW_CREDENTIALS = True
 
 # Custom User Model
 AUTH_USER_MODEL = 'chats.User'
+
