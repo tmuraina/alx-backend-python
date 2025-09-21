@@ -116,6 +116,18 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
             """Return the JSON data."""
             return self.json_data
 
+    def test_public_repos(self):
+        """Test public_repos method returns expected repository names."""
+        client = GithubOrgClient("google")
+        result = client.public_repos()
+        self.assertEqual(result, self.expected_repos)
+
+    def test_public_repos_with_license(self):
+        """Test public_repos method with license filter returns expected repos."""
+        client = GithubOrgClient("google")
+        result = client.public_repos(license="apache-2.0")
+        self.assertEqual(result, self.apache2_repos)
+
 
 if __name__ == '__main__':
     unittest.main()
