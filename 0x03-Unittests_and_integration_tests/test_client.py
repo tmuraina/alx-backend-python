@@ -90,7 +90,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     def setUpClass(cls):
         """Set up class method to start patching requests.get."""
         def side_effect(url):
-            """Side effect function to return appropriate payload based on URL."""
+            """Side effect function to return payload based on URL."""
             if url == "https://api.github.com/orgs/google":
                 return cls.MockResponse(cls.org_payload)
             elif url == cls.org_payload.get('repos_url'):
@@ -107,11 +107,11 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
     class MockResponse:
         """Mock response class to simulate requests.Response."""
-        
+
         def __init__(self, json_data):
             """Initialize mock response with JSON data."""
             self.json_data = json_data
-        
+
         def json(self):
             """Return the JSON data."""
             return self.json_data
@@ -123,7 +123,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         self.assertEqual(result, self.expected_repos)
 
     def test_public_repos_with_license(self):
-        """Test public_repos method with license filter returns expected repos."""
+        """Test public_repos with license filter returns expected repos."""
         client = GithubOrgClient("google")
         result = client.public_repos(license="apache-2.0")
         self.assertEqual(result, self.apache2_repos)
