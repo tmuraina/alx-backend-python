@@ -33,7 +33,7 @@ class User(AbstractUser):
     
     # Email field (already exists in AbstractUser, but ensure it's unique and required)
     email = models.EmailField(unique=True, null=False, blank=False)
-
+    
     # Password hash field (explicitly defined to match database specification)
     # Note: AbstractUser already handles password hashing, but we define this for specification compliance
     password = models.CharField(
@@ -71,6 +71,24 @@ class User(AbstractUser):
     # Use email as the username field for authentication
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
+    
+    # Add related_name to avoid conflicts with default auth.User
+    groups = models.ManyToManyField(
+        'auth.Group',
+        verbose_name='groups',
+        blank=True,
+        help_text='The groups this user belongs to.',
+        related_name='chats_user_set',
+        related_query_name='chats_user',
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        verbose_name='user permissions',
+        blank=True,
+        help_text='Specific permissions for this user.',
+        related_name='chats_user_set',
+        related_query_name='chats_user',
+    )
     
     class Meta:
         db_table = 'chats_user'
