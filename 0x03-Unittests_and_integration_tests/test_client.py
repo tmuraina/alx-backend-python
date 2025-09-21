@@ -38,6 +38,26 @@ class TestGithubOrgClient(unittest.TestCase):
             result = client._public_repos_url
             self.assertEqual(result, known_payload["repos_url"])
 
+    @patch('client.get_json')
+    def test_public_repos(self, mock_get_json):
+        """Test that public_repos returns expected repo list and calls methods once."""
+        test_repos_payload = [
+            {"name": "repo1"},
+            {"name": "repo2"},
+            {"name": "repo3"}
+        ]
+        mock_get_json.return_value = test_repos_payload
+        
+        with patch('client.GithubOrgClient._public_repos_url',
+                   new_callable=lambda: property(lambda self: "https://api.github.com/orgs/google/repos")) as mock_public_repos_url:
+            client = GithubOrgClient("google")
+            result = client.public_repos()
+            
+            expected_repos = ["repo1", "repo2", "repo3"]
+            self.assertEqual(result, expected_repos)
+            mock_get_json.assert_called_once()
+            mock_public_repos_url.assert_called_once()
+
 
 if __name__ == '__main__':
     unittest.main()
