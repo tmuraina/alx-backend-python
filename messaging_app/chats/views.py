@@ -22,7 +22,8 @@ from .serializers import (
     LoginSerializer,
     ChangePasswordSerializer
 )
-
+from .filters import MessageFilter
+from .pagination import MessagePagination
 
 class StandardResultsSetPagination(PageNumberPagination):
     """Custom pagination class for consistent API responses."""
@@ -227,7 +228,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     ViewSet for Message model.
     Provides CRUD operations for messages with conversation filtering.
     """
-    queryset = Message.objects.all()
+    queryset = Message.objects.all().order_by('-created_at')
     serializer_class = MessageSerializer
     pagination_class = StandardResultsSetPagination
     permission_classes = [IsAuthenticated, IsParticipantOfConversation]
