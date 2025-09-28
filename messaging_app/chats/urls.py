@@ -1,26 +1,26 @@
 # messaging_app/chats/urls.py
 
-from django.urls import path, include
-from rest_framework import routers
-from rest_framework_nested import routers as nested_routers
-from .views import ConversationViewSet, MessageViewSet, UserViewSet, CustomAuthToken
+from django.urls import path
+from rest_framework.routers import DefaultRouter
+from . import auth
 
-# Create router and register viewsets
-router = routers.DefaultRouter()
-router.register(r'conversations', ConversationViewSet, basename='conversation')
-router.register(r'messages', MessageViewSet, basename='message')
-router.register(r'users', UserViewSet, basename='user')
+# Create a router for ViewSets (if you have any)
+router = DefaultRouter()
 
-# Create nested router for conversations and messages
-conversations_router = nested_routers.NestedDefaultRouter(router, r'conversations', lookup='conversation')
-conversations_router.register(r'messages', MessageViewSet, basename='conversation-messages')
+# Register your ViewSets here when you create them
+# Example: router.register(r'conversations', views.ConversationViewSet)
+# Example: router.register(r'messages', views.MessageViewSet)
 
 urlpatterns = [
-    # Include all router URLs
-    path('', include(router.urls)),
-    path('', include(conversations_router.urls)),
-    
     # Authentication endpoints
-    path('auth/login/', CustomAuthToken.as_view(), name='api_login'),
-    path('auth/', include('rest_framework.urls', namespace='rest_framework')),
-]
+    path('register/', auth.register_user, name='register'),
+    path('login/', auth.login_user, name='login'),
+    path('logout/', auth.logout_user, name='logout'),
+    path('profile/', auth.user_profile, name='profile'),
+    
+    # Add your other app endpoints here when you create them
+    # Example: path('conversations/', views.ConversationListCreateView.as_view(), name='conversation-list'),
+    # Example: path('conversations/<int:pk>/', views.ConversationDetailView.as_view(), name='conversation-detail'),
+    # Example: path('messages/', views.MessageListCreateView.as_view(), name='message-list'),
+    # Example: path('messages/<int:pk>/', views.MessageDetailView.as_view(), name='message-detail'),
+] + router.urls

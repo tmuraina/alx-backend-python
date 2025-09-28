@@ -8,3 +8,4 @@ Django>=4.2.0,<5.0
 djangorestframework>=3.14.0
 djangorestframework-simplejwt>=5.2.0
 PyJWT>=2.8.0
+djangorestframework-nested>=0.0.1
