@@ -126,3 +126,29 @@ class IsOwnerOfProfile(BasePermission):
     def has_object_permission(self, request, view, obj):
         # Users can only access their own profile
         return obj == request.user
+
+
+class IsParticipantOfConversation(permissions.BasePermission):
+    """
+    Custom permission to allow only participants of a conversation 
+    to view, send, update, or delete messages.
+    """
+
+    def has_permission(self, request, view):
+        # First, check if user is authenticated
+        return request.user and request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        """
+        Check object-level permission.
+        Assuming `obj` is a Conversation or a Message with a FK to Conversation.
+        """
+        if hasattr(obj, "participants"):  
+            # Conversation model with a participants many-to-many field
+            return request.user in obj.participants.all()
+
+        if hasattr(obj, "conversation"):  
+            # Message model with a FK to Conversation
+            return request.user in obj.conversation.participants.all()
+
+        return False
