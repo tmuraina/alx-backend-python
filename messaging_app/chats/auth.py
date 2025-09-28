@@ -1,6 +1,3 @@
-<<<<<<< HEAD
- 
-=======
 # messaging_app/chats/auth.py
 
 from django.contrib.auth import authenticate
@@ -250,4 +247,3 @@ def user_profile(request):
         return Response({
             'error': 'Failed to retrieve profile'
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
->>>>>>> bbf66c22f2230e4958ab3b99ff40112827863cca
