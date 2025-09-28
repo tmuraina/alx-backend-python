@@ -118,7 +118,10 @@ class Migration(migrations.Migration):
         ),
         migrations.AddConstraint(
             model_name='message',
-            constraint=models.CheckConstraint(check=models.Q((message_body__isnull, False)), name='message_body_not_null'),
+            constraint=models.CheckConstraint(
+                check=models.Q(message_body__isnull, False), 
+                name='message_body_not_null',
+            ),
         ),
         migrations.AddIndex(
             model_name='conversation',
