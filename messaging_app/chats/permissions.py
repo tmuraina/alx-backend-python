@@ -130,25 +130,34 @@ class IsOwnerOfProfile(BasePermission):
 
 class IsParticipantOfConversation(permissions.BasePermission):
     """
-    Custom permission to allow only participants of a conversation 
-    to view, send, update, or delete messages.
+    Custom permission:
+    - Only authenticated users allowed
+    - Only participants of a conversation can send, view, update, or delete messages
     """
 
     def has_permission(self, request, view):
-        # First, check if user is authenticated
+        # User must be authenticated for any action
         return request.user and request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
         """
-        Check object-level permission.
-        Assuming `obj` is a Conversation or a Message with a FK to Conversation.
+        Enforce object-level permissions.
         """
-        if hasattr(obj, "participants"):  
-            # Conversation model with a participants many-to-many field
-            return request.user in obj.participants.all()
+        # Check if the user is part of the conversation
+        if hasattr(obj, "participants"):
+            is_participant = request.user in obj.participants.all()
+        elif hasattr(obj, "conversation"):
+            is_participant = request.user in obj.conversation.participants.all()
+        else:
+            return False
 
-        if hasattr(obj, "conversation"):  
-            # Message model with a FK to Conversation
-            return request.user in obj.conversation.participants.all()
+        # ✅ Restrict methods explicitly
+        if request.method in permissions.SAFE_METHODS:  
+            # GET, HEAD, OPTIONS
+            return is_participant
+
+        if request.method in ["POST", "PUT", "PATCH", "DELETE"]:
+            # Write actions allowed only for participants
+            return is_participant
 
         return False
