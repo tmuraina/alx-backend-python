@@ -4,10 +4,12 @@ from rest_framework import viewsets, status, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q, Prefetch
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
+from .permissions import IsParticipantOfConversation
 
 from .models import User, Conversation, Message
 from .serializers import (
@@ -105,9 +107,10 @@ class ConversationViewSet(viewsets.ModelViewSet):
     ViewSet for Conversation model.
     Provides CRUD operations for conversations with proper filtering.
     """
+    queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
     pagination_class = StandardResultsSetPagination
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsParticipantOfConversation]
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     ordering_fields = ['created_at', 'last_message_at']
     ordering = ['-last_message_at', '-created_at']
@@ -224,9 +227,10 @@ class MessageViewSet(viewsets.ModelViewSet):
     ViewSet for Message model.
     Provides CRUD operations for messages with conversation filtering.
     """
+    queryset = Message.objects.all()
     serializer_class = MessageSerializer
     pagination_class = StandardResultsSetPagination
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsParticipantOfConversation]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     search_fields = ['message_body']
     ordering_fields = ['sent_at']
